@@ -24,6 +24,7 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 	private JButton btnOption1;
 	private JButton btnOption2;
 	private JButton btnOption3;
+	private JButton btnOption5;
 	private JButton btnOption9;
 	public Shop shop;
 
@@ -80,16 +81,20 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 		btnOption3.setBounds(80, 110, 160, 23);
 		contentPane.add(btnOption3);
 		
+		btnOption5 = new JButton("5. Mostrar Inventario");
+		btnOption5.addActionListener(this);
+		btnOption5.setBounds(80, 140, 160, 23);
+		contentPane.add(btnOption5);
+		
 		btnOption9 = new JButton("9. Eliminar Producto");
 		btnOption9.addActionListener(this);
-		btnOption9.setBounds(80, 140, 160, 23);
+		btnOption9.setBounds(80, 170, 160, 23);
 		contentPane.add(btnOption9);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == btnOption1) {
-				
 				openCashView(shop);
 			}
 			
@@ -99,6 +104,9 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 			
 			if (e.getSource() == btnOption3) {
 				OpenProductView(shop, Constants.OPTION_ADD_STOCK);
+			}
+			if (e.getSource() == btnOption5) {
+				OpenInventoryView(shop, Constants.OPTION_SHOW_INVENTORY);
 			}
 			
 			if (e.getSource() == btnOption9) {
@@ -133,5 +141,9 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 		ProductView productView = new ProductView(shop, mode);
 		productView.setVisible(true);
 	}
+	
+	public void OpenInventoryView(Shop shop) {
+		InventoryView inventoryView = new InventoryView();
+		inventoryView.setVisible(true);
+	}
 }
-//hola

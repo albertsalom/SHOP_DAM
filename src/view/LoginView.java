@@ -97,7 +97,7 @@ public class LoginView extends JFrame implements ActionListener{
 	        	return; 
 	        }
 			
-			Employee employee = new Employee(1, numEmployee, password);
+			Employee employee = new Employee(numEmployee, password);
 			boolean loginSuccesful = employee.login(numEmployee, password);
 			
 			
