@@ -488,6 +488,18 @@ public class Shop {
 		
 
 	}
+	
+	public Object[][] getInventoryData() {
+		Object[][] data = new Object[inventory.size()][4];
+		for (int i = 0; i < inventory.size(); i++) {
+			Product product = inventory.get(i);
+			data[i][0] = product.getName();
+			data[i][1] = product.getWholesalerPrice();
+			data[i][2] = product.isAvailable();
+			data[i][3] = product.getStock();
+		}
+		return data;
+	}
 
 
 
