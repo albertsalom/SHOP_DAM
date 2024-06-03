@@ -111,7 +111,7 @@ public class Shop {
 //		inventory.add(new Product("Fresa", 5.00, true, 20));	
 		
 		try {
-			File defaultProducts = new File("C:\\Users\\santi\\eclipse-workspace\\UF3P1_ShopV2\\files\\inputInventory.txt");
+			File defaultProducts = new File("C:\\Users\\Albert\\git\\SHOP_DAM\\dam2_m03_uf2_poo_shop\\files\\inputInventory.txt");
 		    if (defaultProducts.canRead()) {
 			    	FileReader newFichero = new FileReader(defaultProducts);
 			    	BufferedReader newFichero2 = new BufferedReader(newFichero);
@@ -340,7 +340,7 @@ public class Shop {
 					 } else {
 						
 					
-				      FileWriter myWriter = new FileWriter("C:\\Users\\santi\\eclipse-workspace\\UF3P1_ShopV2\\files\\sales_yyyy-mm-dd.txt");
+				      FileWriter myWriter = new FileWriter("C:\\Users\\Albert\\git\\SHOP_DAM\\dam2_m03_uf2_poo_shop\\files\\sales_yyyy-mm-dd.txt");
 				      for (int i = 0; i < sales.size(); i++) {
 							if (sales.get(i) != null) {
 								String sale = sales.get(i).toString(); // Convert to String if necessary

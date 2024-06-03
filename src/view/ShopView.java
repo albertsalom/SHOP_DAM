@@ -105,8 +105,9 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 			if (e.getSource() == btnOption3) {
 				OpenProductView(shop, Constants.OPTION_ADD_STOCK);
 			}
+			
 			if (e.getSource() == btnOption5) {
-				OpenInventoryView(shop, Constants.OPTION_SHOW_INVENTORY);
+				OpenInventoryView(shop);
 			}
 			
 			if (e.getSource() == btnOption9) {
@@ -143,7 +144,7 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 	}
 	
 	public void OpenInventoryView(Shop shop) {
-		InventoryView inventoryView = new InventoryView();
+		InventoryView inventoryView = new InventoryView(shop);
 		inventoryView.setVisible(true);
 	}
 }

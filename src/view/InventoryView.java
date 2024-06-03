@@ -8,54 +8,56 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JScrollPane;
+
+import main.Shop;
+import utils.Constants;
 
 public class InventoryView extends JDialog {
 
 	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
 	private JTable table;
+	private Shop shop;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			InventoryView dialog = new InventoryView();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	//public static void main(String[] args) {
+	//	try {
+	//		InventoryView dialog = new InventoryView(shop);
+	//		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+	//		dialog.setVisible(true);
+	//	} catch (Exception e) {
+	//		e.printStackTrace();
+	//	}
+	//}
 
 	/**
 	 * Create the dialog.
 	 */
-	public InventoryView() {
+	public InventoryView(Shop shop) {
+		setTitle("Inventario");
+		
+		this.shop = shop;
+		
+		
 		
 		setBounds(100, 100, 450, 300);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		{
-			table = new JTable();
-			contentPanel.add(table);
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			JScrollPane scrollPane = new JScrollPane();
+			getContentPane().add(scrollPane, BorderLayout.CENTER);
 			{
-				JButton okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
+				table = new JTable();
+				table.setModel(new DefaultTableModel(
+					new Object[][] {
+						{null, null, null, null, null, null},
+					},
+					new String[] {
+						"Codigo", "Nombre", "Precio publico", "Precio mayorista", "Stock", "Disponible"
+					}
+				));
+				scrollPane.setViewportView(table);
 			}
 		}
 	}
