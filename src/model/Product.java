@@ -8,6 +8,7 @@ public class Product {
     private boolean available;
     private int stock;
     private static int totalProducts;
+    private boolean deluxe;
     
     static double EXPIRATION_RATE=0.60;
     
@@ -19,6 +20,7 @@ public class Product {
 		this.publicPrice = wholesalerPrice * 2;
 		this.available = available;
 		this.stock = stock;
+		this.deluxe = deluxe;
 		totalProducts++;
 	}
 
@@ -81,12 +83,26 @@ public class Product {
 	public void expire() {
 		this.publicPrice = this.getPublicPrice()*EXPIRATION_RATE;
 	}
+	
+	public boolean isDeluxe() {
+		if (publicPrice	 >= 100) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void setDeluxe(boolean deluxe) {
+		this.deluxe = deluxe;
+		
+	}
+	
 
 	@Override
 	public String toString() {
 		return "ID: " + id + " | Nombre: " + name + " | Precio: " + publicPrice
 				+ " | PrecioMayorista: " + wholesalerPrice + " | Disponibilidad:"
-				+ " " + available + " | Stock: " + stock;
+				+ " " + available + " | Stock: " + stock + " | Deluxe: " + deluxe;
 	}	
     
 }

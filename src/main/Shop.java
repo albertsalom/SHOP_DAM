@@ -119,10 +119,11 @@ public class Shop {
 		    	while (linea != null) {
 					String[] parts = linea.split(";");
 					
-					if (parts.length == 3) {
+					if (parts.length == 4) {
 						String productName = parts[0].split(":")[1].trim();
 						Double wholesalerPrice = Double.parseDouble( parts[1].split(":")[1].trim());
 						int stock = Integer.parseInt(parts[2].split(":")[1].trim());
+						boolean available = Boolean.parseBoolean(parts[3].split(":")[1].trim());
 
 						inventory.add(new Product(productName, wholesalerPrice, true, stock));
 						
