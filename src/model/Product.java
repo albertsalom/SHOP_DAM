@@ -20,7 +20,7 @@ public class Product {
 		this.publicPrice = wholesalerPrice * 2;
 		this.available = available;
 		this.stock = stock;
-		this.deluxe = deluxe;
+		this.deluxe = publicPrice > 100;
 		totalProducts++;
 	}
 
@@ -85,11 +85,7 @@ public class Product {
 	}
 	
 	public boolean isDeluxe() {
-		if (publicPrice	 >= 100) {
-			return true;
-		} else {
-			return false;
-		}
+		return deluxe;
 	}
 	
 	public void setDeluxe(boolean deluxe) {
