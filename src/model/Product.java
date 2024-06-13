@@ -12,7 +12,7 @@ public class Product {
     
     static double EXPIRATION_RATE=0.60;
     
-	public Product(String name, double wholesalerPrice, boolean available, int stock) {
+	public Product(String name, double wholesalerPrice, boolean available, int stock, boolean deluxe) {
 		super();
 		this.id = totalProducts+1;
 		this.name = name;
@@ -20,7 +20,7 @@ public class Product {
 		this.publicPrice = wholesalerPrice * 2;
 		this.available = available;
 		this.stock = stock;
-		this.deluxe = publicPrice > 100;
+		this.deluxe = wholesalerPrice > 50;
 		totalProducts++;
 	}
 
@@ -97,7 +97,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "ID: " + id + " | Nombre: " + name + " | Precio: " + publicPrice
-				+ " | PrecioMayorista: " + wholesalerPrice + " | Disponibilidad:"
+				+ " | PrecioMayorista: " + wholesalerPrice + " | PrecioPublico: " + publicPrice +" | Disponibilidad:"
 				+ " " + available + " | Stock: " + stock + " | Deluxe: " + deluxe;
 	}	
     

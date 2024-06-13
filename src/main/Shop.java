@@ -124,7 +124,7 @@ public class Shop {
 						Double wholesalerPrice = Double.parseDouble( parts[1].split(":")[1].trim());
 						int stock = Integer.parseInt(parts[2].split(":")[1].trim());
 
-						inventory.add(new Product(productName, wholesalerPrice, true, stock));
+						inventory.add(new Product(productName, wholesalerPrice, true, stock, false));
 						
 					} else {
 						System.out.println("Invalid format");
@@ -158,7 +158,7 @@ public class Shop {
 		System.out.print("Stock: ");
 		int stock = scanner.nextInt();
 
-		addProduct(new Product(name, wholesalerPrice, true, stock));
+		addProduct(new Product(name, wholesalerPrice, true, stock, false));
 		
 
 	}

@@ -159,7 +159,7 @@ public class ProductView extends JDialog implements ActionListener{
         Product product = shop.findProduct(productNameStr);
 
 		if (product == null) {
-    		product = new Product(productNameStr, productPrice, true, stockProduct);
+    		product = new Product(productNameStr, productPrice, true, stockProduct, false);
     		shop.addProduct(product);
     		JOptionPane.showMessageDialog(this, "Producto añadido correctamente", "Info", JOptionPane.INFORMATION_MESSAGE);
         	dispose();
