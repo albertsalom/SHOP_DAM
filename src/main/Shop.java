@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;
+import dao.Dao;
 
 public class Shop {
 	public double cash = 100.00;
@@ -499,6 +500,10 @@ public class Shop {
 			data[i][3] = product.getStock();
 		}
 		return data;
+	}
+	
+	public boolean writeInventory() {
+		return dao.writeInventory(inventory);
 	}
 
 

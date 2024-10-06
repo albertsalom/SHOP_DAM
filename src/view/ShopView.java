@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 public class ShopView extends JFrame implements ActionListener, KeyListener{
 
 	private static final long serialVersionUID = 1L;
+	private JButton btnExportInventory;
 	private JPanel contentPane;
 	private JButton btnOption1;
 	private JButton btnOption2;
@@ -66,34 +67,42 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 		lblSelectOption.setBounds(49, 25, 188, 14);
 		contentPane.add(lblSelectOption);
 		
+		btnExportInventory = new JButton("0. Exportar inventario");
+		btnExportInventory.addActionListener(this);
+		btnExportInventory.setBounds(80, 50, 160, 23);
+		contentPane.add(btnExportInventory);
+		
 		btnOption1 = new JButton("1. Contar Caja");
 		btnOption1.addActionListener(this);
-		btnOption1.setBounds(80, 50, 160, 23);
+		btnOption1.setBounds(80, 80, 160, 23);
 		contentPane.add(btnOption1);
 		
 		btnOption2 = new JButton("2. Añadir Producto");
 		btnOption2.addActionListener(this);
-		btnOption2.setBounds(80, 80, 160, 23);
+		btnOption2.setBounds(80, 110, 160, 23);
 		contentPane.add(btnOption2);
 		
 		btnOption3 = new JButton("3. Añadir Stock");
 		btnOption3.addActionListener(this);
-		btnOption3.setBounds(80, 110, 160, 23);
+		btnOption3.setBounds(80, 140, 160, 23);
 		contentPane.add(btnOption3);
 		
 		btnOption5 = new JButton("5. Mostrar Inventario");
 		btnOption5.addActionListener(this);
-		btnOption5.setBounds(80, 140, 160, 23);
+		btnOption5.setBounds(80, 170, 160, 23);
 		contentPane.add(btnOption5);
 		
 		btnOption9 = new JButton("9. Eliminar Producto");
 		btnOption9.addActionListener(this);
-		btnOption9.setBounds(80, 170, 160, 23);
+		btnOption9.setBounds(80, 200, 160, 23);
 		contentPane.add(btnOption9);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == btnExportInventory) {
+				openExportInventory(shop);
+			}
 			if (e.getSource() == btnOption1) {
 				openCashView(shop);
 			}
@@ -131,6 +140,15 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private void openExportInventory() {
+		if (!shop.writeInventory()) {
+			JOptionPane.showMessageDialog(this, "Unable to export inventory to file", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
+		JOptionPane.showMessageDialog(this, "Inventory exported successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 	public void openCashView(Shop shop) {
