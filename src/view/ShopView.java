@@ -100,9 +100,6 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnExportInventory) {
-				openExportInventory(shop);
-			}
 			if (e.getSource() == btnOption1) {
 				openCashView(shop);
 			}
@@ -142,14 +139,14 @@ public class ShopView extends JFrame implements ActionListener, KeyListener{
 		
 	}
 	
-	private void openExportInventory() {
-		if (!shop.writeInventory()) {
-			JOptionPane.showMessageDialog(this, "Unable to export inventory to file", "Error", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
-		
-		JOptionPane.showMessageDialog(this, "Inventory exported successfully", "Information", JOptionPane.INFORMATION_MESSAGE);
-	}
+	 private void handleExportInventory() {
+	        boolean success = dao.writeInventory(shop.getInventory()); // Asegúrate de usar dao
+	        if (success) {
+	            javax.swing.JOptionPane.showMessageDialog(this, "Inventario exportado con éxito.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+	        } else {
+	            javax.swing.JOptionPane.showMessageDialog(this, "Hubo un problema al exportar el inventario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
 	
 	public void openCashView(Shop shop) {
 		CashView cashView = new CashView(shop);

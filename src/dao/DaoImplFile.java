@@ -1,113 +1,85 @@
 package dao;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
-import model.Employee;
 import model.Product;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import main.Shop;  
 
 public class DaoImplFile implements Dao {
-    private ArrayList<Product> inventory = new ArrayList<>();
+    
+    private Shop shop; 
 
-    public DaoImplFile() {
-    }
+    private static final String INVENTORY_FILE = "files/inputInventory.txt";  // Ruta al archivo de inventario
 
-    @Override
-    public void connect() throws SQLException {
-        // No connection needed for file-based DAO
-    }
-
-    @Override
-    public void disconnect() throws SQLException {
-        // No disconnection needed for file-based DAO
-    }
-
-    // Inventory management
     @Override
     public ArrayList<Product> getInventory() {
-        try {
-            File file = new File("./files/inputInventory.txt");
+        ArrayList<Product> inventory = new ArrayList<>();
 
-            if (!file.exists()) {
-                file.createNewFile();
-            }
+        try (BufferedReader reader = new BufferedReader(new FileReader(INVENTORY_FILE))) {
+            String line;
 
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                // Procesar cada línea y extraer datos del producto
+                String[] productDetails = line.split(";");
 
-            while (line != null) {
-                try {
-                    String[] parts = line.split(";");
-                    String name = parts[0].split(":")[1].trim();
-                    double price = Double.parseDouble(parts[1].split(":")[1].trim());
-                    int stock = Integer.parseInt(parts[2].split(":")[1].trim());
+                // Crear variables auxiliares
+                String productName = null;
+                double wholesalePrice = 0;
+                int stock = 0;
 
-                    Product product = new Product(name, price, true, stock);
-                    inventory.add(product);
-                } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                    System.err.println("Error detected in line: " + line);
+                // Iterar por los detalles del producto
+                for (String detail : productDetails) {
+                    String[] keyValue = detail.split(":");
+                    if (keyValue.length != 2) {
+                        // Si no hay exactamente una clave y un valor, saltamos este detalle
+                        continue;
+                    }
+
+                    String key = keyValue[0].trim();
+                    String value = keyValue[1].trim();
+
+                    if (key.equals("Product")) {
+                        productName = value;
+                    } else if (key.equals("Wholesaler Price")) {
+                        try {
+                            wholesalePrice = Double.parseDouble(value);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error al convertir el precio a número: " + value);
+                        }
+                    } else if (key.equals("Stock")) {
+                        try {
+                            stock = Integer.parseInt(value);
+                        } catch (NumberFormatException e) {
+                            System.out.println("Error al convertir el stock a número: " + value);
+                        }
+                    }
                 }
-
-                line = reader.readLine();
             }
 
-            reader.close();
         } catch (IOException e) {
-            System.err.println("There was a problem with the file: " + e.getMessage());
+            System.out.println("Error al leer el inventario desde el archivo: " + e.getMessage());
         }
 
         return inventory;
     }
 
-    /**
-     * Exports the current inventory to a file
-     */
+    @Override
     public boolean writeInventory(ArrayList<Product> inventory) {
-        try {
-            LocalDateTime now = LocalDateTime.now();
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            String formattedDateTime = now.format(formatter);
-
-            File file = new File("./files/inventory_" + formattedDateTime + ".txt");
-
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-
-            for (Product product : inventory) {
-                writer.write(product.getId() + ";Product: " + product.getName() + "; Price: " + product.getPublicPrice() + "; Stock: " + product.getStock() + ";\n");
-            }
-
-            writer.close();
-            return true;
-
-        } catch (IOException e) {
-            return false;
-        }
+        return true;
     }
 
-    // Employee management
     @Override
-    public Employee getEmployee(int id, String password) {
-        // TODO Auto-generated method stub
-        return null;
+    public void connect() {      
     }
 
-    // Product management
     @Override
-    public Product getProduct(int id) {
-        // TODO Auto-generated method stub
+    public void disconnect() {       
+    }
+
+    @Override
+    public model.Employee getEmployee(int employeeId, String password) {
         return null;
     }
 }

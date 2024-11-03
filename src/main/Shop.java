@@ -14,6 +14,8 @@ import java.io.FileReader;
 import java.io.FileWriter;   // Import the FileWriter class
 import java.io.IOException;
 import dao.Dao;
+import dao.DaoImplFile;
+import dao.DaoImplXml;
 
 public class Shop {
 	public double cash = 100.00;

@@ -23,6 +23,8 @@ public class Product {
 		this.deluxe = wholesalerPrice > 50;
 		totalProducts++;
 	}
+	
+	
 
 	public int getId() {
 		return id;
