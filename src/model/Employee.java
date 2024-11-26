@@ -1,84 +1,79 @@
 package model;
 
-import java.sql.SQLException;
-
-import dao.Dao;
-import dao.DaoImplJDBC;
 import main.Logable;
+import dao.*;
 
 public class Employee extends Person implements Logable{
+	//private int employeeId;
+	//private String password;
+	// connection using JDBC SQL
+	//private Dao dao = new DaoImplJDBC();
 	
-	private int employeeId;
-	private String user;
-	private String password;
-	public static final int USER = 123;
-	public static final String PASSWORD = "test";	
+	public static int USER = 123;
+	public static String PASSWORD = "test";
 	
-	public Dao dao;
-	
-	public Employee(int employeeId, String user, String password) {
-		super("test");
-		this.employeeId = employeeId;
-		this.user = user;
-		this.password = password;
-		this.dao = new DaoImplJDBC();
+	public Employee(String name) {
+		super(name);
 	}
 	
-	public Employee(int employeeId, String password) {
-		super("test");
-		this.employeeId = employeeId;
-		this.password = password;
-		this.dao = new DaoImplJDBC();
+	public Employee(int employeeId, String name, String password) {
+		super(name);
+		this.USER = employeeId;
+		this.PASSWORD = password;
 	}
 	
-	public void setEmployeeId(int employeeID) {
-		this.employeeId = employeeID;
+	public Employee() {
+		super();
 	}
 	
-	public int getEmployeeId() {
-		return employeeId;
+	//public Dao getDao() {
+	//	return dao;
+	//}
+
+	//public void setDao(Dao dao) {
+	//	this.dao = dao;
+	//}
+
+	public static int getUSER() {
+		return USER;
 	}
-	
-	public void setUser(String user) {
-		this.user = user;
+
+	public static void setUSER(int uSER) {
+		USER = uSER;
 	}
-	
-	public String getUser() {
-		return user;
+
+	public static String getPASSWORD() {
+		return PASSWORD;
 	}
-	
-	public void setPassword(String password) {
-		this.password = password;
+
+	public static void setPASSWORD(String pASSWORD) {
+		PASSWORD = pASSWORD;
 	}
+
 	
-	public String getPassword() {
-		return password;
-	}
-	
+
+	/**
+	 * @param user from application, password from application
+	 * @return true if credentials are correct or false if not
+	 */
+	@Override
 	public boolean login(int user, String password) {
-//		if (user == USER && password.equals(PASSWORD)) {
-//				return true;
-//		} else {
-//			return false;
-//		}
+//		if (USER == user && PASSWORD.equals(password)) {
+//			return true;
+//		} 
+		boolean success = false;
 		
-		try {
-			dao.connect();
-			
-			Employee employee = dao.getEmployee(user, password);
-			
-			dao.disconnect();
-			
-			if (employee != null && employee.getEmployeeId() == employeeId && employee.getPassword().equals(password)) {
-				return true;
-			} else {
-				return false;
-			}
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
+		// connect to data
+		//dao.connect();
+		
+		// get employee data
+		//if(dao.getEmployee(user, password) != null) {
+			success =  true;
+		//}
+		
+		// disconnect data
+		//dao.disconnect();
+		return success;
 	}
+
 }

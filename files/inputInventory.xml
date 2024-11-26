@@ -1,27 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<prodocts>
-	<product name="Manzana">
-		<wholesalerPrice currency="Euro">10.00</wholesalerPrice>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<prodocts total="2">
+	<product id="1" name="Melon">
+		<available>true</available>
+		<wholesalerPrice currency="Euro">10.0</wholesalerPrice>
+		<publicPrice currency="Euro">20.0</publicPrice>
 		<stock>10</stock>
 	</product>
-	<product name="Fresa">
-		<wholesalerPrice currency="Euro">05.00</wholesalerPrice>
+	<product id="2" name="Pera">
+		<available>true</available>
+		<wholesalerPrice currency="Euro">5.0</wholesalerPrice>
+		<publicPrice currency="Euro">10.0</publicPrice>
 		<stock>20</stock>
-	</product>
-	<product name="Platano">
-		<wholesalerPrice currency="Euro">09.00</wholesalerPrice>
-		<stock>15</stock>
-	</product>
-	<product name="Mango">
-		<wholesalerPrice currency="Euro">25.00</wholesalerPrice>
-		<stock>5</stock>
-	</product>
-	<product name="Limon">
-		<wholesalerPrice currency="Euro">04.00</wholesalerPrice>
-		<stock>5</stock>
-	</product>
-	<product name="Mandarina">
-		<wholesalerPrice currency="Euro">12.00</wholesalerPrice>
-		<stock>30</stock>
 	</product>
 </prodocts>

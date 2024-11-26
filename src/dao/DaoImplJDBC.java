@@ -1,54 +1,65 @@
 package dao;
 
-import java.beans.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import model.Employee;
 
-public class DaoImplJDBC implements Dao {
-	
-	private Connection conn;
-	
-	// Método para conectar con la bbdd
+public abstract class DaoImplJDBC implements Dao {
+	Connection connection;
+
 	@Override
-	public void connect() throws SQLException {
+	public void connect() {
 		// Define connection parameters
 		String url = "jdbc:mysql://localhost:3306/shop";
 		String user = "root";
 		String pass = "";
-		this.conn = DriverManager.getConnection(url, user, pass);
+		try {
+			this.connection = DriverManager.getConnection(url, user, pass);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override
-	public Employee getEmployee(int employeeId, String password) throws SQLException {
-		Employee employee = null;
-		
-		String query = "SELECT * FROM employee where employeeId = ?";
-		
-		try(PreparedStatement ps = conn.prepareStatement(query)) {
-			ps.setInt(1, employeeId);
-			try (ResultSet rs = ps.executeQuery()){
-				if (rs.next()) {
-	        		employee =  new Employee(rs.getInt(1), rs.getString(2), rs.getString(3));            		            				
-	        	}
-			} catch (Exception e) {
+	public void disconnect() {
+		// TODO Auto-generated method stub
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		return employee;
 	}
 
 	@Override
-	public void disconnect() throws SQLException {
-		if (conn != null) {
-			conn.close();
-		}
+	public Employee getEmployee(int employeeId, String password) {
+		Employee employee = null;
+		String query = "select * from employee where employeeId= ? and password = ? ";
 		
+		try (PreparedStatement ps = connection.prepareStatement(query)) { 
+    		ps.setInt(1,employeeId);
+    	  	ps.setString(2,password);
+    	  	//System.out.println(ps.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+            	if (rs.next()) {
+            		employee = new Employee(rs.getInt(1), rs.getString(2), rs.getString(3));
+            	}
+            }
+        } catch (SQLException e) {
+			// in case error in SQL
+			e.printStackTrace();
+		}
+    	return employee;
 	}
-	
+
 }

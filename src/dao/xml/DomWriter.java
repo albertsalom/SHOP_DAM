@@ -1,95 +1,80 @@
 package dao.xml;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import model.Product;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import model.Product;
+import java.io.File;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class DomWriter {
-	private Document document;
-	private String nameFile;
-	private File file;
 
-	public DomWriter(String name) {
-		this.nameFile = name;
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newDefaultInstance();
-			DocumentBuilder builder;
-			builder = factory.newDocumentBuilder();
-			document = builder.newDocument();
-		} catch (ParserConfigurationException e) {
-			System.out.println("ERROR generating document");
-		}
-	}
+    public boolean generateDocument(ArrayList<Product> products) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
 
-	public boolean generateReport(ArrayList<Product> products) {
-		Element parentNode = document.createElement("products");
-		parentNode.setAttribute("total", String.valueOf(products.size()));
-		document.appendChild(parentNode);
+            // Crear un nuevo documento XML
+            Document document = builder.newDocument();
+            Element root = document.createElement("inventory");
+            document.appendChild(root);
 
-		for (Product product : products) {
-			Element newProduct = document.createElement("product");
-			newProduct.setAttribute("id", String.valueOf(product.getId()));
-			parentNode.appendChild(newProduct);
+            // Añadir cada producto al XML
+            for (Product product : products) {
+                Element productElement = document.createElement("product");
 
-			Element productName = document.createElement("name");
-			productName.setTextContent(String.valueOf(product.getName()));
-			newProduct.appendChild(productName);
+                // Validar y añadir el nombre del producto
+                Element name = document.createElement("name");
+                name.appendChild(document.createTextNode(product.getName() != null ? product.getName() : "Desconocido"));
+                productElement.appendChild(name);
 
-			Element productPrice = document.createElement("price");
-			productPrice.setAttribute("currency", product.getWholesalerPrice().getCurrency());
-			productPrice.setTextContent(String.valueOf(product.getWholesalerPrice().getValue()));
-			newProduct.appendChild(productPrice);
+                // Validar y añadir el precio del mayorista
+                Element wholesalerPrice = document.createElement("wholesalerPrice");
+                if (product.getWholesalerPrice() != null) {
+                    wholesalerPrice.appendChild(document.createTextNode(String.valueOf(product.getWholesalerPrice().getValue())));
+                } else {
+                    wholesalerPrice.appendChild(document.createTextNode("0.0")); // Valor predeterminado
+                    System.out.println("Advertencia: El precio del mayorista es nulo para el producto: " + product.getName());
+                }
+                productElement.appendChild(wholesalerPrice);
 
-			Element productStock = document.createElement("stock");
-			productStock.setTextContent(String.valueOf(product.getStock()));
-			newProduct.appendChild(productStock);
-		}
-		return generateXml();
+                // Añadir el stock del producto
+                Element stock = document.createElement("stock");
+                stock.appendChild(document.createTextNode(String.valueOf(product.getStock())));
+                productElement.appendChild(stock);
 
-	}
+                root.appendChild(productElement);
+            }
 
-	private boolean generateXml() {
-		boolean isFileGenerate = false;
-		try {
-			TransformerFactory factory = TransformerFactory.newInstance();
-			Transformer transformer = factory.newTransformer();
+            // Especificar la ruta y nombre del archivo de salida
+            String fileName = "files/inventory_" + LocalDate.now().toString() + ".xml";
+            File outputFile = new File(fileName);
 
-			Source source = new DOMSource(document);
-			this.file = new File("./xml/" + this.nameFile);
+            // Transformar el DOM en un archivo XML
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource domSource = new DOMSource(document);
+            StreamResult streamResult = new StreamResult(outputFile);
 
-			FileWriter fw = new FileWriter(this.file);
-			PrintWriter pw = new PrintWriter(fw);
-			Result result = new StreamResult(pw);
+            transformer.transform(domSource, streamResult);
 
-			transformer.transform(source, result);
+            System.out.println("Archivo XML generado correctamente en " + fileName);
+            return true; // Indica que el documento se generó correctamente
 
-			isFileGenerate = true;
-		} catch (IOException e) {
-			System.out.println("Error when creating writter file");
-		} catch (TransformerException e) {
-			System.out.println("Error transforming the document");
-		}
-		return isFileGenerate;
-	}
+        } catch (ParserConfigurationException | TransformerException e) {
+            System.out.println("Error al generar el documento XML: " + e.getMessage());
+            e.printStackTrace();
+            return false; // Indica que hubo un error al generar el documento
+        }
+    }
 }

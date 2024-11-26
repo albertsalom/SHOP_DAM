@@ -2,54 +2,70 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import model.Product;
-import main.Shop;
-import utils.Constants;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import main.Shop;
+import model.Product;
+import model.Amount;
+import utils.Constants;
 
 public class ProductView extends JDialog implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
-	private final JPanel contentPanel = new JPanel();
-	private JTextField textProductName;
-	private JTextField textStockProduct;
-	private JTextField textProductPrice;
-	private JButton cancelButton;
-	private JButton okButton;
 	private Shop shop;
-	private int mode;
+	private int option;
+	private JButton okButton;
+	private JButton cancelButton;
+	private JTextField textFieldName;
+	private JTextField textFieldStock;
+	private JTextField textFieldPrice;
+	private final JPanel contentPanel = new JPanel();
 
+	/**
+	 * Launch the application.
+	 */
+//	public static void main(String[] args) {
+//		try {
+//			ProductView dialog = new ProductView();
+//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+//			dialog.setVisible(true);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	/**
 	 * Create the dialog.
 	 */
-	public ProductView(Shop shop, int mode) {
-		
+	public ProductView(Shop shop, int option) {
 		this.shop = shop;
-		this.mode = mode;
+		this.option = option;
 		
-		
-		if (mode == Constants.OPTION_ADD_STOCK) {
-			setTitle("Añadir Producto");
+		// main configuration dialog
+		switch (option) {
+		case Constants.OPTION_ADD_PRODUCT:
+			setTitle("Añadir Producto");			
+			break;
+		case Constants.OPTION_ADD_STOCK:
+			setTitle("Añadir Stock");			
+			break;
+		case Constants.OPTION_REMOVE_PRODUCT:
+			setTitle("Eliminar Producto");			
+			break;		
 
-		}
-		if (mode == Constants.OPTION_ADD_STOCK) {
-			setTitle("Añadir Stock");
-
-		}
-		if (mode == Constants.OPTION_DELETE_PRODUCT) {
-			setTitle("Eliminar Producto");
-
+		default:
+			break;
 		}
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -57,44 +73,57 @@ public class ProductView extends JDialog implements ActionListener{
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		
-		JLabel lblProductName = new JLabel("Nombre Producto:");
-		lblProductName.setBounds(46, 35, 120, 14);
-		contentPanel.add(lblProductName);
+		// name section
+		JLabel lblName = new JLabel("Nombre producto:");
+		lblName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblName.setBounds(33, 10, 119, 19);
+		contentPanel.add(lblName);
+		textFieldName = new JTextField();
+		textFieldName.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldName.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		textFieldName.setBounds(169, 10, 136, 25);
+		contentPanel.add(textFieldName);
+		textFieldName.setColumns(10);		
 		
-		textProductName = new JTextField();
-		textProductName.setBounds(160, 35, 130, 20);
-		contentPanel.add(textProductName);
-		textProductName.setColumns(10);
-		{
-			JLabel lblStockProduct = new JLabel("Stock Producto:");
-			lblStockProduct.setBounds(46, 70, 120, 14);
-			if (mode == Constants.OPTION_ADD_PRODUCT || mode == Constants.OPTION_ADD_STOCK) {
-				contentPanel.add(lblStockProduct);				
-			}
+		// stock section
+		JLabel lblStock = new JLabel("Stock producto:");
+		lblStock.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblStock.setBounds(33, 50, 119, 19);
+		contentPanel.add(lblStock);
+		textFieldStock = new JTextField();
+		textFieldStock.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldStock.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		textFieldStock.setBounds(169, 50, 136, 25);
+		contentPanel.add(textFieldStock);
+		textFieldStock.setColumns(10);
+		if (option == Constants.OPTION_ADD_PRODUCT || option == Constants.OPTION_ADD_STOCK) {
+			lblStock.setVisible(true);
+			textFieldStock.setVisible(true);			
+		}else {
+			lblStock.setVisible(false);
+			textFieldStock.setVisible(false);
 		}
-		{
-			textStockProduct = new JTextField();
-			textStockProduct.setBounds(160, 70, 130, 20);
-			if (mode == Constants.OPTION_ADD_PRODUCT || mode == Constants.OPTION_ADD_STOCK) {
-				contentPanel.add(textStockProduct);				
-			}
-				textStockProduct.setColumns(10);
+		
+		// price section
+		JLabel lblPrice = new JLabel("Precio producto:");
+		lblPrice.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPrice.setBounds(33, 90, 119, 19);
+		contentPanel.add(lblPrice);
+		textFieldPrice = new JTextField();
+		textFieldPrice.setHorizontalAlignment(SwingConstants.RIGHT);
+		textFieldPrice.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		textFieldPrice.setBounds(169, 90, 136, 25);
+		contentPanel.add(textFieldPrice);
+		textFieldPrice.setColumns(10);
+		if (option == Constants.OPTION_ADD_PRODUCT) {
+			lblPrice.setVisible(true);
+			textFieldPrice.setVisible(true);			
+		}else {
+			lblPrice.setVisible(false);
+			textFieldPrice.setVisible(false);
 		}
-		{
-			JLabel lblProductPrice = new JLabel("Precio Producto:");
-			lblProductPrice.setBounds(46, 105, 120, 14);
-			if (mode == Constants.OPTION_ADD_PRODUCT) {
-				contentPanel.add(lblProductPrice);				
-			}
-		}
-		{
-			textProductPrice = new JTextField();
-			textProductPrice.setBounds(160, 105, 130, 20);
-			if (mode == 2) {
-				contentPanel.add(textProductPrice);
-			}
-			textProductPrice.setColumns(10);
-		}
+		
+		
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -102,124 +131,93 @@ public class ProductView extends JDialog implements ActionListener{
 			{
 				okButton = new JButton("OK");
 				okButton.setActionCommand("OK");
-				okButton.addActionListener(this);
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
+				okButton.addActionListener(this);
 			}
 			{
 				cancelButton = new JButton("Cancel");
 				cancelButton.setActionCommand("Cancel");
-				cancelButton.addActionListener(this);
 				buttonPane.add(cancelButton);
-
+				cancelButton.addActionListener(this);
 			}
 		}
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	    String actionCommand = e.getActionCommand();
-	    
-		
-		if (e.getSource() == okButton){
-			if (mode == Constants.OPTION_ADD_PRODUCT) {
-				addProduct();
-			}
-			if (mode == Constants.OPTION_ADD_STOCK) {
-				addStock();
-			}
-			if (mode == Constants.OPTION_DELETE_PRODUCT) {
-				deleteProduct();
-			}
-		}
-		 else if (actionCommand.equals("Cancel")) {
-			 cancelOperation();	
-	}
-	
-	}
-	
-	public void addProduct(){
-		
-		String productNameStr = textProductName.getText();
-	    String stockProductStr = textStockProduct.getText();
-	    String productPriceStr = textProductPrice.getText();
-	    
-	    int stockProduct;
-	    int productPrice;
-	    
-        try {
-        	stockProduct = Integer.parseInt(stockProductStr);
-        	productPrice = Integer.parseInt(productPriceStr);
-        } catch (NumberFormatException ex) {
-        	JOptionPane.showMessageDialog(this, "stock o precio no válidos", "Error", JOptionPane.ERROR_MESSAGE);
-        	return; 
-        }
-        
-		
-        Product product = shop.findProduct(productNameStr);
+		// TODO Auto-generated method stub
+		if (e.getSource() == okButton) {
+			Product product;
+			switch (this.option) {
+			case Constants.OPTION_ADD_PRODUCT:
+				// check product does not exist
+				product = shop.findProduct(textFieldName.getText());
+				
+				if (product != null) {
+					JOptionPane.showMessageDialog(null, "Producto ya existe ", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					
+				} else {
+					product = new Product(textFieldName.getText(), 
+							new Amount(Double.parseDouble(textFieldPrice.getText())) ,
+							true,
+							Integer.parseInt(textFieldStock.getText()));
+					shop.addProduct(product);
+					JOptionPane.showMessageDialog(null, "Producto añadido ", "Information",
+							JOptionPane.INFORMATION_MESSAGE);
+					// release current screen
+					dispose();	
+				}
+				
+				break;
+				
+			case Constants.OPTION_ADD_STOCK:
+				// check product exists
+				product = shop.findProduct(textFieldName.getText());
+				
+				if (product == null) {
+					JOptionPane.showMessageDialog(null, "Producto no existe ", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					
+				} else {					
+					product.setStock(product.getStock() + Integer.parseInt(textFieldStock.getText()));
+					JOptionPane.showMessageDialog(null, "Stock actualizado ", "Information",
+							JOptionPane.INFORMATION_MESSAGE);
+					// release current screen
+					dispose();	
+				}
+				
+				break;
+				
+			case Constants.OPTION_REMOVE_PRODUCT:
+				// check product exists
+				product = shop.findProduct(textFieldName.getText());
+				
+				if (product == null) {
+					JOptionPane.showMessageDialog(null, "Producto no existe ", "Error",
+							JOptionPane.ERROR_MESSAGE);
+					
+				} else {					
+					shop.getInventory().remove(product);
+					JOptionPane.showMessageDialog(null, "Producto eliminado", "Information",
+							JOptionPane.INFORMATION_MESSAGE);
+					// release current screen
+					dispose();	
+				}
+				
+				break;
 
-		if (product == null) {
-    		product = new Product(productNameStr, productPrice, true, stockProduct, false);
-    		shop.addProduct(product);
-    		JOptionPane.showMessageDialog(this, "Producto añadido correctamente", "Info", JOptionPane.INFORMATION_MESSAGE);
-        	dispose();
-        } else {
-        	JOptionPane.showMessageDialog(this, "El producto ya existe", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-		
-		shop.showInventory();
-		
-	}
-	
-	public void addStock() {
-		String productNameStr = textProductName.getText();
-	    String stockProductStr = textStockProduct.getText();
-	    
-	    int stockProduct;
-	    
-        try {
-        	stockProduct = Integer.parseInt(stockProductStr);
-        } catch (NumberFormatException ex) {
-        	JOptionPane.showMessageDialog(this, "stock o precio no válidos", "Error", JOptionPane.ERROR_MESSAGE);
-        	return; 
-        }
-        
-        
-        
-        Product product = shop.findProduct(productNameStr);
-        
-        if (product != null) {
-        	product.setStock(product.getStock() + stockProduct);
-        	JOptionPane.showMessageDialog(this, "Stock añadido correctamente", "Info", JOptionPane.INFORMATION_MESSAGE);
-        	dispose();
-        } else {
-        	JOptionPane.showMessageDialog(this, "El producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-        shop.showInventory();
-		
-        
-	}
-	
-	public void deleteProduct() {
-		String productNameStr = textProductName.getText();
-        
-        Product product = shop.findProduct(productNameStr);
-        if (product != null) {
-			int index = shop.getInventory().indexOf(product);
-			shop.getInventory().remove(index);
-			JOptionPane.showMessageDialog(this, "Producto eliminado correctamente", "Info", JOptionPane.INFORMATION_MESSAGE);
-			dispose();
-		} else {
-        	JOptionPane.showMessageDialog(this, "El producto no existe", "Error", JOptionPane.ERROR_MESSAGE);
+			default:
+				break;
+			}
+			
 		}
-        
-		shop.showInventory();
-        
-	}
-	
-	public void cancelOperation() {
-		dispose();
+		
+		if (e.getSource() == cancelButton) {
+			// release current screen
+			dispose();			
+		}		
 	}
 
 }

@@ -1,85 +1,77 @@
 package dao;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.xml.sax.SAXException;
-
 import dao.xml.DomWriter;
 import dao.xml.SaxReader;
-import model.Employee;
 import model.Product;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public class DaoImplXml implements Dao {
 
-	@Override
-	public void connect() {
-		// TODO Auto-generated method stub
+    private static final String INVENTORY_XML_FILE = "files/inputInventory.xml"; // Ruta del archivo de inventario XML
 
-	}
+    @Override
+    public ArrayList<Product> getInventory() {
+        ArrayList<Product> products = null;
 
-	@Override
-	public Employee getEmployee(int user, String pw) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        // Usar SAX para leer el documento XML de inventario
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        try {
+            SAXParser parser = factory.newSAXParser();
+            File inputFile = new File(INVENTORY_XML_FILE);
 
-	@Override
-	public void disconnect() {
-		// TODO Auto-generated method stub
+            // Verificar si el archivo existe
+            if (!inputFile.exists()) {
+                System.out.println("ERROR: Archivo 'inputInventory.xml' no encontrado en la ruta especificada.");
+                return null;
+            }
 
-	}
+            // Usar SaxReader para parsear el XML
+            SaxReader saxReader = new SaxReader();
+            parser.parse(inputFile, saxReader);
+            products = saxReader.getProductList();
+            
+        } catch (ParserConfigurationException | SAXException e) {
+            System.out.println("ERROR creando el parser");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("ERROR al leer el archivo 'inputInventory.xml'.");
+            e.printStackTrace();
+        }
 
-	@Override
-	public ArrayList<Product> getInventory() {
-		ArrayList<Product> products = null;
-		File file = new File("./xml/inputInventory.xml");
+        return products; // Devolver la lista de productos leída
+    }
 
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		SAXParser parser;
-		try {
-			parser = factory.newSAXParser();
-			SaxReader saxReader = new SaxReader();
-			parser.parse(file, saxReader);
-			products = saxReader.getProducts();
+    @Override
+    public boolean writeInventory(ArrayList<Product> inventory) {
 
-		} catch (ParserConfigurationException | SAXException e) {
-			System.out.println("ERROR creating the parser");
-		} catch (IOException e) {
-			System.out.println("ERROR file not found");
-		}
-		return products;
-	}
 
-	@Override
-	public boolean writeInventory(ArrayList<Product> product) {
-		boolean getReport = false;
+        // Usar DomWriter para escribir el inventario en un nuevo archivo XML
+        DomWriter domWriter = new DomWriter();
+        return domWriter.generateDocument(inventory); // Devuelve true si se genera el documento correctamente
+    }
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		LocalDateTime date = LocalDateTime.now();
-		String nameFile = "inventory_" + date.format(formatter) + ".xml";
+    // Métodos de la interfaz Dao sin implementación
+    @Override
+    public void connect() {
+        
+    }
 
-		DomWriter domWriter = new DomWriter(nameFile);
-		getReport = domWriter.generateReport(product);
+    @Override
+    public void disconnect() {
+        
+    }
 
-		return getReport;
-	}
-
+    @Override
+    public model.Employee getEmployee(int employeeId, String password) {
+        return null; 
+    }
 }

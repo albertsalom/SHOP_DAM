@@ -1,33 +1,29 @@
 package view;
 
-import model.Employee; 
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-
-import utils.Constants;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import exception.LimitLoginException;
+import model.Employee;
+import utils.Constants;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.JPasswordField;
-import javax.swing.JFormattedTextField;
-import java.awt.Color;
 
 public class LoginView extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JFormattedTextField textNumEmployee;
-	private JPasswordField textPassword;
-	private JButton buttonAcceder;
-	private int numErrores;
+	private JTextField textFieldEmployeeId;
+	private JTextField textFieldPassword;
+	private JButton btnLogin;
+	private int counterErrorLogin;
 
 	/**
 	 * Launch the application.
@@ -37,7 +33,6 @@ public class LoginView extends JFrame implements ActionListener{
 			public void run() {
 				try {
 					LoginView frame = new LoginView();
-					frame.setTitle("Login");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -50,6 +45,7 @@ public class LoginView extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public LoginView() {
+		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -57,58 +53,79 @@ public class LoginView extends JFrame implements ActionListener{
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lblNumEmployee = new JLabel("Numero de empleado");
-		lblNumEmployee.setBounds(39, 43, 159, 14);
-		contentPane.add(lblNumEmployee);
-		
-		textNumEmployee = new JFormattedTextField();
-		textNumEmployee.setBounds(49, 64, 96, 20);
-		contentPane.add(textNumEmployee);
-		textNumEmployee.setColumns(10);
-		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(39, 105, 106, 14);
-		contentPane.add(lblPassword);
-		
-		textPassword = new JPasswordField();
-		textPassword.setBounds(52, 121, 96, 20);
-		contentPane.add(textPassword);
-		textPassword.setColumns(10);
-		
-		buttonAcceder = new JButton("Acceder");
-		buttonAcceder.setForeground(new Color(255, 255, 255));
-		buttonAcceder.setBackground(new Color(0, 128, 128));
-		buttonAcceder.addActionListener(this);
-		buttonAcceder.setBounds(301, 215, 89, 23);
-		contentPane.add(buttonAcceder);
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == buttonAcceder) {
-			String numEmployeeStr = textNumEmployee.getText();
-			String password = textPassword.getText();
-			
-			int numEmployee;
-	        try {
-	            numEmployee = Integer.parseInt(numEmployeeStr);
-	        } catch (NumberFormatException ex) {
-	        	JOptionPane.showMessageDialog(this, "Formato del número de empleado inválido", "Error", JOptionPane.ERROR_MESSAGE);
-	        	return; 
-	        }
-			
-			Employee employee = new Employee(numEmployee, password);
-			boolean loginSuccesful = employee.login(numEmployee, password);
-			
-			
-			if (loginSuccesful) {
-			    ShopView shopView = new ShopView();
 
-				shopView.setVisible(true);
-			    
-			    dispose();
+		JLabel lblEmployeeId = new JLabel("Número de empleado");
+		lblEmployeeId.setBounds(55, 50, 130, 14);
+		contentPane.add(lblEmployeeId);
+
+		textFieldEmployeeId = new JTextField();
+		textFieldEmployeeId.setBounds(65, 75, 176, 20);
+		contentPane.add(textFieldEmployeeId);
+		textFieldEmployeeId.setColumns(10);
+
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setBounds(55, 115, 130, 14);
+		contentPane.add(lblPassword);
+
+		textFieldPassword = new JTextField();
+		textFieldPassword.setBounds(65, 140, 176, 20);
+		contentPane.add(textFieldPassword);
+		textFieldPassword.setColumns(10);
+
+		btnLogin = new JButton("Acceder");
+		btnLogin.setBounds(308, 208, 89, 23);
+		contentPane.add(btnLogin);
+		// listen button 
+		btnLogin.addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnLogin) {
+			// in case clicks button
+			String employeeId = textFieldEmployeeId.getText();
+			String password = textFieldPassword.getText();
+
+			if (employeeId.isEmpty() || password.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Usuario y contraseña son obligatorios", "Error",
+						JOptionPane.ERROR_MESSAGE);
+
+			} else {
+				Employee employee = new Employee();
+				try {
+					boolean logged = employee.login(Integer.parseInt(employeeId), password);
+					
+					if (Constants.MAX_LOGIN_TIMES <= counterErrorLogin) {
+						throw new LimitLoginException("Error login superado", counterErrorLogin);
+					}
+					if (logged) {
+						// redirect to shop window
+						ShopView shop = new ShopView();
+						shop.setExtendedState(NORMAL);
+						shop.setVisible(true);
+						
+						// release current screen
+						dispose();					
+						
+					} else {
+						counterErrorLogin++;
+						JOptionPane.showMessageDialog(null, "Usuario o password incorrectos ", "Error",
+								JOptionPane.ERROR_MESSAGE);
+						
+						// clean login form
+						textFieldEmployeeId.setText("");
+						textFieldPassword.setText("");
+					}
+				} catch (LimitLoginException ex) {
+					// TODO: handle exception
+					JOptionPane.showMessageDialog(null, ("Error login, superados los " + counterErrorLogin + " intentos"), "Error",
+							JOptionPane.ERROR_MESSAGE);
+					// release current screen
+					dispose();
+				}
+				
 			}
+
 		}
 	}
-		
 }

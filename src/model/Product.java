@@ -1,106 +1,128 @@
 package model;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "product") 
 public class Product {
-	private int id;
+
+    private int id;
     private String name;
-    private double publicPrice;
-    private double wholesalerPrice;
+    private Amount publicPrice;
+    private Amount wholesalerPrice;
     private boolean available;
     private int stock;
     private static int totalProducts;
-    private boolean deluxe;
-    
-    static double EXPIRATION_RATE=0.60;
-    
-	public Product(String name, double wholesalerPrice, boolean available, int stock, boolean deluxe) {
-		super();
-		this.id = totalProducts+1;
-		this.name = name;
-		this.wholesalerPrice = wholesalerPrice;
-		this.publicPrice = wholesalerPrice * 2;
-		this.available = available;
-		this.stock = stock;
-		this.deluxe = wholesalerPrice > 50;
-		totalProducts++;
-	}
-	
-	
 
-	public int getId() {
-		return id;
-	}
+    private String badge;
+    private String color;
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public static final double EXPIRATION_RATE = 0.60;
 
-	public String getName() {
-		return name;
-	}
+    public Product() {
+        this.id = ++totalProducts; // Incrementa automáticamente el ID
+        this.available = true;     // Valor predeterminado
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Product(String name, Amount wholesalerPrice, boolean available, int stock) {
+        this(); 
+        this.name = name;
+        this.wholesalerPrice = wholesalerPrice;
+        this.publicPrice = new Amount(wholesalerPrice.getValue() * 2);
+        this.stock = stock;
+    }
 
-	public double getPublicPrice() {
-		return publicPrice;
-	}
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public int getId() {
+        return id;
+    }
 
-	public void setPublicPrice(double publicPrice) {
-		this.publicPrice = publicPrice;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public double getWholesalerPrice() {
-		return wholesalerPrice;
-	}
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public String getName() {
+        return name;
+    }
 
-	public void setWholesalerPrice(double wholesalerPrice) {
-		this.wholesalerPrice = wholesalerPrice;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public boolean isAvailable() {
-		return available;
-	}
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public Amount getPublicPrice() {
+        return publicPrice;
+    }
 
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
+    public void setPublicPrice(Amount publicPrice) {
+        this.publicPrice = publicPrice;
+    }
 
-	public int getStock() {
-		return stock;
-	}
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public Amount getWholesalerPrice() {
+        return wholesalerPrice;
+    }
 
-	public void setStock(int stock) {
-		this.stock = stock;
-	}
+    public void setWholesalerPrice(Amount wholesalerPrice) {
+        this.wholesalerPrice = wholesalerPrice;
+    }
 
-	public static int getTotalProducts() {
-		return totalProducts;
-	}
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public boolean isAvailable() {
+        return available;
+    }
 
-	public static void setTotalProducts(int totalProducts) {
-		Product.totalProducts = totalProducts;
-	}
-	
-	public void expire() {
-		this.publicPrice = this.getPublicPrice()*EXPIRATION_RATE;
-	}
-	
-	public boolean isDeluxe() {
-		return deluxe;
-	}
-	
-	public void setDeluxe(boolean deluxe) {
-		this.deluxe = deluxe;
-		
-	}
-	
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
-	@Override
-	public String toString() {
-		return "ID: " + id + " | Nombre: " + name + " | Precio: " + publicPrice
-				+ " | PrecioMayorista: " + wholesalerPrice + " | PrecioPublico: " + publicPrice +" | Disponibilidad:"
-				+ " " + available + " | Stock: " + stock + " | Deluxe: " + deluxe;
-	}	
-    
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+
+    public static int getTotalProducts() {
+        return totalProducts;
+    }
+
+    public static void setTotalProducts(int totalProducts) {
+        Product.totalProducts = totalProducts;
+    }
+
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public String getBadge() {
+        return badge;
+    }
+
+    public void setBadge(String badge) {
+        this.badge = badge;
+    }
+
+    @XmlElement // Incluir cuando tenga tiempo en el XML
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void expire() {
+        if (this.publicPrice != null) {
+            double newValue = this.publicPrice.getValue() * EXPIRATION_RATE;
+            this.publicPrice.setValue(newValue);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Product [name=" + name + ", publicPrice=" + publicPrice + ", wholesalerPrice=" + wholesalerPrice
+                + ", available=" + available + ", stock=" + stock + "]";
+    }
 }

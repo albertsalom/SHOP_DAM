@@ -1,165 +1,138 @@
 package view;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import main.Shop;
-import utils.Constants;
-
-import javax.swing.JLabel;
-import javax.swing.Action;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.util.ArrayList;
 
-public class ShopView extends JFrame implements ActionListener, KeyListener{
+import model.Amount;
+import model.Product;
+import utils.Constants;
+import dao.DaoImplFile;
+import main.Shop;
 
-	private static final long serialVersionUID = 1L;
-	private JButton btnExportInventory;
-	private JPanel contentPane;
-	private JButton btnOption1;
-	private JButton btnOption2;
-	private JButton btnOption3;
-	private JButton btnOption5;
-	private JButton btnOption9;
-	public Shop shop;
+public class ShopView extends JFrame {
+    private DaoImplFile dao;
+    private Shop shop;  // Instancia de Shop para acceder a la caja
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ShopView frame = new ShopView();
-					frame.setVisible(true);
-					frame.setTitle("Shop");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    // Constructor
+    public ShopView() {
+        this.dao = new DaoImplFile();
+        this.shop = new Shop();  // Inicializa la tienda
 
-	/**
-	 * Create the frame.
-	 */
-	public ShopView() {
-		this.shop = new Shop();
-		
-		shop.loadInventory();
-		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
-		setTitle("MyShop.com");
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        // Configuración de la ventana
+        setTitle("Gestión de la Tienda");
+        setSize(400, 400);  // Ajustar tamaño para 9 botones
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(6, 1));  // Disposición para 9 botones
 
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
-		JLabel lblSelectOption = new JLabel("Seleccione o pulse una opción");
-		lblSelectOption.setBounds(49, 25, 188, 14);
-		contentPane.add(lblSelectOption);
-		
-		btnExportInventory = new JButton("0. Exportar inventario");
-		btnExportInventory.addActionListener(this);
-		btnExportInventory.setBounds(80, 50, 160, 23);
-		contentPane.add(btnExportInventory);
-		
-		btnOption1 = new JButton("1. Contar Caja");
-		btnOption1.addActionListener(this);
-		btnOption1.setBounds(80, 80, 160, 23);
-		contentPane.add(btnOption1);
-		
-		btnOption2 = new JButton("2. Añadir Producto");
-		btnOption2.addActionListener(this);
-		btnOption2.setBounds(80, 110, 160, 23);
-		contentPane.add(btnOption2);
-		
-		btnOption3 = new JButton("3. Añadir Stock");
-		btnOption3.addActionListener(this);
-		btnOption3.setBounds(80, 140, 160, 23);
-		contentPane.add(btnOption3);
-		
-		btnOption5 = new JButton("5. Mostrar Inventario");
-		btnOption5.addActionListener(this);
-		btnOption5.setBounds(80, 170, 160, 23);
-		contentPane.add(btnOption5);
-		
-		btnOption9 = new JButton("9. Eliminar Producto");
-		btnOption9.addActionListener(this);
-		btnOption9.setBounds(80, 200, 160, 23);
-		contentPane.add(btnOption9);
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnOption1) {
-				openCashView(shop);
-			}
-			
-			if (e.getSource() == btnOption2) {
-				OpenProductView(shop, Constants.OPTION_ADD_PRODUCT);
-			}
-			
-			if (e.getSource() == btnOption3) {
-				OpenProductView(shop, Constants.OPTION_ADD_STOCK);
-			}
-			
-			if (e.getSource() == btnOption5) {
-				OpenInventoryView(shop);
-			}
-			
-			if (e.getSource() == btnOption9) {
-				OpenProductView(shop, Constants.OPTION_DELETE_PRODUCT);
-			}
-		}
+        // Crear botones
+        JButton exportInventoryButton = new JButton("0. Exportar inventario");
+        JButton countCashButton = new JButton("1. Contar caja");
+        JButton addProductButton = new JButton("2. Añadir producto");
+        JButton addStockButton = new JButton("3. Añadir stock"); 
+        JButton removeProductButton = new JButton("9. Eliminar producto");
+        JButton exitButton = new JButton("10. Salir");
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+        // Añadir listeners a los botones
+        exportInventoryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exportInventory();
+            }
+        });
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+        countCashButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                countCashRegister();  
+            }
+        });
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	 private void handleExportInventory() {
-	        boolean success = dao.writeInventory(shop.getInventory()); // Asegúrate de usar dao
-	        if (success) {
-	            javax.swing.JOptionPane.showMessageDialog(this, "Inventario exportado con éxito.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-	        } else {
-	            javax.swing.JOptionPane.showMessageDialog(this, "Hubo un problema al exportar el inventario.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-	        }
-	    }
-	
-	public void openCashView(Shop shop) {
-		CashView cashView = new CashView(shop);
-		cashView.setVisible(true);
-	}
-	
-	public void OpenProductView(Shop shop, int mode) {
-		ProductView productView = new ProductView(shop, mode);
-		productView.setVisible(true);
-	}
-	
-	public void OpenInventoryView(Shop shop) {
-		InventoryView inventoryView = new InventoryView(shop);
-		inventoryView.setVisible(true);
-	}
+        addProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addProduct();
+            }
+        });
+
+        addStockButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	addStock();
+            }
+        });
+
+        removeProductButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                removeProduct(); 
+            }
+        });
+
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        // Añadir los botones al frame
+        add(exportInventoryButton);
+        add(countCashButton);
+        add(addProductButton);
+        add(addStockButton);
+        add(removeProductButton);  
+        add(exitButton);
+    }
+
+    // Método para mostrar el dinero en la caja, accediendo a la variable cash en Shop
+    public void countCashRegister() {
+        Amount cash = shop.getCash();  // Obtener el valor de cash desde Shop
+        JOptionPane.showMessageDialog(this, "Dinero en caja: €" + cash);
+    }
+
+    // Método para exportar el inventario
+    public void exportInventory() {
+        boolean isExported = shop.writeInventory();
+
+        if (isExported) {
+        	JOptionPane.showMessageDialog(this, "El inventario ha sido exportado correctamente.");
+        } else {
+        	JOptionPane.showMessageDialog(this, "Hubo un problema al exportar el inventario.", "Error de Exportación", JOptionPane.ERROR_MESSAGE);
+
+        }
+    }
+
+    // Método para añadir un producto (placeholder)
+    public void addProduct() {
+        // Redirigir a ProductView para añadir un nuevo producto
+        ProductView productView = new ProductView(shop, Constants.OPTION_ADD_PRODUCT);
+        productView.setVisible(true); // Mostrar el diálogo de ProductView
+    }
+
+    // Método para eliminar un producto (placeholder)
+    public void removeProduct() {
+        // Redirigir a ProductView para eliminar un producto
+        ProductView productView = new ProductView(shop, Constants.OPTION_REMOVE_PRODUCT);
+        productView.setVisible(true); // Mostrar el diálogo de ProductView
+    }
+    
+    public void addStock() {
+        // Redirigir a ProductView para añadir stock
+        ProductView productView = new ProductView(shop, Constants.OPTION_ADD_STOCK);
+        productView.setVisible(true); // Mostrar el diálogo de ProductView
+    }
+
+    // Método principal para mostrar la ventana
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ShopView view = new ShopView();
+                view.setVisible(true);
+            }
+        });
+    }
 }
