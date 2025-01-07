@@ -44,7 +44,7 @@ public class JaxbMarshaller {
     }
 
     // Clase interna para envolver la lista de productos
-    @XmlRootElement(name = "inventory")
+    @XmlRootElement(name = "productList")
     public static class ProductListWrapper {
         private List<Product> products;
 
