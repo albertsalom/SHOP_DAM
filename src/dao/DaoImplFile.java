@@ -8,7 +8,6 @@ import javax.xml.bind.*;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DaoImplFile implements Dao {
 
@@ -83,3 +82,4 @@ public class DaoImplFile implements Dao {
         }
     }
 }
+

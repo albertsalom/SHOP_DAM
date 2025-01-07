@@ -32,7 +32,7 @@ public class Product {
         this.stock = stock;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public int getId() {
         return id;
     }
@@ -41,7 +41,7 @@ public class Product {
         this.id = id;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public String getName() {
         return name;
     }
@@ -50,7 +50,7 @@ public class Product {
         this.name = name;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public Amount getPublicPrice() {
         return publicPrice;
     }
@@ -59,7 +59,7 @@ public class Product {
         this.publicPrice = publicPrice;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public Amount getWholesalerPrice() {
         return wholesalerPrice;
     }
@@ -68,7 +68,7 @@ public class Product {
         this.wholesalerPrice = wholesalerPrice;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public boolean isAvailable() {
         return available;
     }
@@ -77,7 +77,7 @@ public class Product {
         this.available = available;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public int getStock() {
         return stock;
     }
@@ -86,16 +86,7 @@ public class Product {
         this.stock = stock;
     }
 
-
-    public static int getTotalProducts() {
-        return totalProducts;
-    }
-
-    public static void setTotalProducts(int totalProducts) {
-        Product.totalProducts = totalProducts;
-    }
-
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public String getBadge() {
         return badge;
     }
@@ -104,7 +95,7 @@ public class Product {
         this.badge = badge;
     }
 
-    @XmlElement // Incluir cuando tenga tiempo en el XML
+    @XmlElement
     public String getColor() {
         return color;
     }
