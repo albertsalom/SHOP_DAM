@@ -8,11 +8,10 @@ import javax.xml.bind.*;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DaoImplFile implements Dao {
 
-    private static final String INVENTORY_XML_FILE = "files/inputInventory.xml";
+    private static final String INVENTORY_XML_FILE = "jaxb/inputInventory.xml";
 
     @Override
     public void connect() throws SQLException {
