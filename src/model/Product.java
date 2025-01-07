@@ -53,6 +53,10 @@ public class Product {
         return wholesalerPrice != null ? wholesalerPrice.multiply(BigDecimal.valueOf(2)) : null;
     }
 
+    public void setPublicPrice(BigDecimal publicPrice) {
+        this.publicPrice = publicPrice;
+    }
+
     @XmlElement
     public boolean isAvailable() {
         return available;
@@ -70,4 +74,11 @@ public class Product {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + ", wholesalerPrice=" + wholesalerPrice
+                + ", publicPrice=" + getPublicPrice() + ", available=" + available + ", stock=" + stock + "]";
+    }
 }
+
