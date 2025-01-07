@@ -1,15 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<prodocts total="2">
-	<product id="1" name="Melon">
-		<available>true</available>
-		<wholesalerPrice currency="Euro">10.0</wholesalerPrice>
-		<publicPrice currency="Euro">20.0</publicPrice>
-		<stock>10</stock>
-	</product>
-	<product id="2" name="Pera">
-		<available>true</available>
-		<wholesalerPrice currency="Euro">5.0</wholesalerPrice>
-		<publicPrice currency="Euro">10.0</publicPrice>
-		<stock>20</stock>
-	</product>
-</prodocts>
+<?xml version='1.0' encoding='UTF-8'?>
+<productList>
+    <product>
+        <name>Pera</name>
+        <wholesalerPrice>5.0</wholesalerPrice>
+        <stock>20</stock>
+    </product>
+    <product>
+        <name>Melon</name>
+        <wholesalerPrice>10.0</wholesalerPrice>
+        <stock>10</stock>
+    </product>
+</productList>
