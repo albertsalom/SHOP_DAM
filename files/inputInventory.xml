@@ -1,13 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<productList>
-    <product>
+<productList total="2">
+    <product id="1">
         <name>Pera</name>
         <wholesalerPrice>5.0</wholesalerPrice>
+        <publicPrice>10.00</publicPrice>
+        <available>true</available>
         <stock>20</stock>
     </product>
-    <product>
+    <product id="2">
         <name>Melon</name>
         <wholesalerPrice>10.0</wholesalerPrice>
+        <publicPrice>20.00</publicPrice>
+        <available>true</available>
         <stock>10</stock>
     </product>
 </productList>

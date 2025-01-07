@@ -1,38 +1,27 @@
 package model;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.math.BigDecimal;
 
-@XmlRootElement(name = "product") 
+@XmlRootElement(name = "product")
 public class Product {
 
+    private static int counter = 0; // Contador para generar IDs únicos
     private int id;
     private String name;
-    private Amount publicPrice;
-    private Amount wholesalerPrice;
+    private BigDecimal wholesalerPrice;
+    private BigDecimal publicPrice;
     private boolean available;
     private int stock;
-    private static int totalProducts;
-
-    private String badge;
-    private String color;
-
-    public static final double EXPIRATION_RATE = 0.60;
 
     public Product() {
-        this.id = ++totalProducts; // Incrementa automáticamente el ID
-        this.available = true;     // Valor predeterminado
+        this.id = ++counter; // Generar un ID único automáticamente
+        this.available = true; // Valor predeterminado
     }
 
-    public Product(String name, Amount wholesalerPrice, boolean available, int stock) {
-        this(); 
-        this.name = name;
-        this.wholesalerPrice = wholesalerPrice;
-        this.publicPrice = new Amount(wholesalerPrice.getValue() * 2);
-        this.stock = stock;
-    }
-
-    @XmlElement
+    @XmlAttribute
     public int getId() {
         return id;
     }
@@ -51,21 +40,21 @@ public class Product {
     }
 
     @XmlElement
-    public Amount getPublicPrice() {
-        return publicPrice;
-    }
-
-    public void setPublicPrice(Amount publicPrice) {
-        this.publicPrice = publicPrice;
-    }
-
-    @XmlElement
-    public Amount getWholesalerPrice() {
+    public BigDecimal getWholesalerPrice() {
         return wholesalerPrice;
     }
 
-    public void setWholesalerPrice(Amount wholesalerPrice) {
+    public void setWholesalerPrice(BigDecimal wholesalerPrice) {
         this.wholesalerPrice = wholesalerPrice;
+    }
+
+    @XmlElement
+    public BigDecimal getPublicPrice() {
+        return wholesalerPrice != null ? wholesalerPrice.multiply(BigDecimal.valueOf(2)) : null;
+    }
+
+    public void setPublicPrice(BigDecimal publicPrice) {
+        this.publicPrice = publicPrice;
     }
 
     @XmlElement
@@ -86,34 +75,10 @@ public class Product {
         this.stock = stock;
     }
 
-    @XmlElement
-    public String getBadge() {
-        return badge;
-    }
-
-    public void setBadge(String badge) {
-        this.badge = badge;
-    }
-
-    @XmlElement
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    public void expire() {
-        if (this.publicPrice != null) {
-            double newValue = this.publicPrice.getValue() * EXPIRATION_RATE;
-            this.publicPrice.setValue(newValue);
-        }
-    }
-
     @Override
     public String toString() {
-        return "Product [name=" + name + ", publicPrice=" + publicPrice + ", wholesalerPrice=" + wholesalerPrice
-                + ", available=" + available + ", stock=" + stock + "]";
+        return "Product [id=" + id + ", name=" + name + ", wholesalerPrice=" + wholesalerPrice
+                + ", publicPrice=" + getPublicPrice() + ", available=" + available + ", stock=" + stock + "]";
     }
 }
+
